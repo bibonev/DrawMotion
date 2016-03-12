@@ -1,29 +1,36 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JComponent;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-public class DrawMotionComponent extends JComponent {
+public class DrawMotionComponent extends JPanel {
+	private int count = 0;
 	
-
-	public DrawMotionComponent() {
+	public DrawMotionComponent(DrawMotion dm) {
 		super();
-
+		DrawMotionModel model = new DrawMotionModel(dm);
+		DrawMotionView view = new DrawMotionView(model);
 		
-	}
-
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
+		/*JButton button = new JButton("Click");
 		
-		Color c = new Color(0, 255, 0);
-		g2.setColor(c);
+		button.addActionListener(
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					model.addPoint(new Spot(50, 50, 10));
+					//count++;
+				}
+			});*/
 		
-		//g2.drawLine(xClicked, yClicked, xDragged, yDragged);
-		g2.dispose();
+		model.addObserver(view);
 		
-		repaint();
+		setLayout(new BorderLayout());
+		add(view, BorderLayout.CENTER);
+		//add(button, BorderLayout.SOUTH);
 	}
 }
