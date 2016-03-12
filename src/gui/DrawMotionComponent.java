@@ -8,26 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class DrawMotionComponent extends JPanel {
-	private int count = 0;
+
 	
-	public DrawMotionComponent(DrawMotion dm) {
+	public DrawMotionComponent(DrawMotionModel dm) {
 		super();
-		DrawMotionModel model = new DrawMotionModel(dm);
-		DrawMotionView view = new DrawMotionView(model);
-		
-		/*JButton button = new JButton("Click");
-		
-		button.addActionListener(
-			new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					model.addPoint(new Spot(50, 50, 10));
-					//count++;
-				}
-			});*/
-		
-		model.addObserver(view);
+		DrawMotionView view = new DrawMotionView(dm);
+		dm.addObserver(view);
 		
 		setLayout(new BorderLayout());
 		add(view, BorderLayout.CENTER);

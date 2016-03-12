@@ -24,12 +24,9 @@ public class DrawMotionView extends JPanel implements Observer{
 		Color c = new Color(255, 0, 0);
 		
 		g2.setColor(c);
-		
-		ArrayList<Spot> points = model.getArrayPoints();
-		
-		for (Spot point : points) {
-			g2.fill(point);
-		}
+		Spot spot = model.getPoint();
+		if(spot!=null)
+		g2.fill(spot);
 	}
 
 	@Override

@@ -2,21 +2,25 @@ package gui;
 
 import javax.swing.JFrame;
 
-public class DrawMotionGUI extends JFrame {
+public class DrawMotionGUI {
 
-	public static void main(String[] args) {
-		
-		DrawMotion dm = new DrawMotion();
-		for(int i = 0; i < 10; i++) {
-			dm.addPoint(new Spot(i+10, i+11, 10));
+		private DrawMotionModel model;
+		public DrawMotionGUI(){
+			
+			model= new DrawMotionModel();
+			
+			DrawMotionComponent comp = new DrawMotionComponent(model);
+			
+			JFrame frame = new JFrame("MotionDraw");
+
+			frame.setSize(1920, 1080);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.add(comp);
+			frame.setVisible(true);
 		}
-		DrawMotionComponent comp = new DrawMotionComponent(dm);
+		public DrawMotionModel getModel(){
+			return model;
+		}
 		
-		JFrame frame = new JFrame("Painting");
-
-		frame.setSize(400, 400);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(comp);
-		frame.setVisible(true);
-	}
+	
 }

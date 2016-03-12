@@ -1,29 +1,21 @@
 package gui;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 public class DrawMotionModel extends Observable {
 	
-	private DrawMotion drawMotion;
-
-	public DrawMotionModel(DrawMotion drawMotion){
+	//private DrawMotion drawMotion;
+	private Spot point;
+	public DrawMotionModel(){
 		super();
-		this.drawMotion = drawMotion;
 	}
 	
-	public ArrayList<Spot> getArrayPoints(){
-		return drawMotion.getArrayPoints();
+	public Spot getPoint(){
+		return point;
 	}
 	
-	public void addPoint(Spot point){
-		drawMotion.addPoint(point);
-		setChanged();
-		notifyObservers();
-	}
-	
-	public void clear(){
-		drawMotion.clear();
+	public void setPoint(Spot point){
+		this.point = point;
 		setChanged();
 		notifyObservers();
 	}

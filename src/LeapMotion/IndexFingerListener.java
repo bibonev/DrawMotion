@@ -1,16 +1,28 @@
+package LeapMotion;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Hand;
+import com.leapmotion.leap.InteractionBox;
+import com.leapmotion.leap.Leap;
 import com.leapmotion.leap.Listener;
+import com.leapmotion.leap.Pointable;
+import com.leapmotion.leap.Vector;
+
+import gui.DrawMotionModel;
+import gui.Spot;
 
 class IndexFingerListener extends Listener {
 	private boolean righthanded = true;
 	private Hand hand;
+	private DrawMotionModel model;
 	
 	public void setHand(boolean choice){
 		righthanded=choice;
+	}
+	public void setModel(DrawMotionModel model){
+		this.model=model;
 	}
 	public void onInit(Controller controller) {
 		System.out.println("IndexFingerListener Initialized");
@@ -33,7 +45,18 @@ class IndexFingerListener extends Listener {
 
 	public void onFrame(Controller controller) {
 
+		
 		Frame frame = controller.frame();
+		int appWidth = 1920;
+		int appHeight = 1080;
+
+		InteractionBox iBox = frame.interactionBox();
+		Pointable pointable = frame.pointables().frontmost();
+
+		Vector leapPoint = pointable.stabilizedTipPosition();
+		Vector normalizedPoint = iBox.normalizePoint(leapPoint, false);
+
+		
 
 		if (!frame.hands().isEmpty()){
 			if(righthanded=true)
@@ -41,8 +64,11 @@ class IndexFingerListener extends Listener {
 			else
 				hand=frame.hands().leftmost();
 		Finger indexFinger = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
-		System.out.println("    " + indexFinger.type() + ", id: " + indexFinger.id() + ", tip position: "
-				+ indexFinger.tipPosition());
+		System.out.println(" position:"+indexFinger.tipPosition());
+		
+		float appX = normalizedPoint.getX() * appWidth;
+		float appY = (1 - normalizedPoint.getY()) * appHeight;
+		model.setPoint(new Spot((double)appX,(double)appY,3.0));
 		}
 		if (!frame.hands().isEmpty())
 			System.out.print("");
