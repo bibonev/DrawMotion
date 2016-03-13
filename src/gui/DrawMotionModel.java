@@ -38,5 +38,7 @@ public class DrawMotionModel extends Observable {
 
 	public void setClearValue(boolean clearValue) {
 		this.clearValue = clearValue;
+		setChanged();
+		notifyObservers();
 	}
 }

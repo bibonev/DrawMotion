@@ -26,11 +26,12 @@ public class DrawMotionView extends JPanel implements Observer{
 		if (!model.isClearValue()) {
 			g2.setColor(c);
 			Spot spot = model.getPoint();
-			if(spot!=null)
+			if(spot!=null&&!(spot.getRadius()==15.0&&!c.equals(Color.WHITE)))
 			g2.fill(spot);
 		} else {
 			g2.clearRect(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 			model.setClearValue(false);
+			model.setPoint(null);
 		}
 	}
 

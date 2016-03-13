@@ -26,14 +26,13 @@ import gui.DrawMotionModel;
 import gui.Spot;
 
 class IndexFingerListener extends Listener {
-	private boolean righthanded = true;
 	private Hand hand;
 	private DrawMotionModel model;
 	private ArrayList<Color> colors = new ArrayList<Color>();
 	private int i = 2;
+	private Color currentColor = Color.BLACK;
 
-	public IndexFingerListener(DrawMotionModel model, boolean choice) {
-		righthanded = choice;
+	public IndexFingerListener(DrawMotionModel model) {
 		this.model = model;
 		colors.add(Color.WHITE);
 		colors.add(Color.GRAY);
@@ -54,7 +53,7 @@ class IndexFingerListener extends Listener {
 
 	public void onConnect(Controller controller) {
 		System.out.println("IndexFingerListener Connected");
-		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
+		//controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
 	}
 
@@ -79,38 +78,18 @@ class IndexFingerListener extends Listener {
 		Vector leapPoint = pointable.stabilizedTipPosition();
 		Vector normalizedPoint = iBox.normalizePoint(leapPoint, false);
 
+		hand = frame.hands().rightmost();
+		
 		if (!frame.hands().isEmpty()) {
-			if (righthanded = true)
-				hand = frame.hands().rightmost();
-			else
-				hand = frame.hands().leftmost();
 			Finger indexFinger = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
-			// System.out.println(" position:"+indexFinger.tipPosition());
 			Gesture gesture = frame.gestures().get(0);
-			// System.out.println(gesture.isValid());
+			
 			if (indexFinger.tipPosition().getZ() >= -70 && indexFinger.tipPosition().getZ() <= 70) {
 				float appX = normalizedPoint.getX() * appWidth;
 				float appY = (1 - normalizedPoint.getY()) * appHeight;
+				model.setColor(currentColor);
 				model.setPoint(new Spot((double) appX, (double) appY, 3.0));
-			} else {
-				// System.out.println(""+ gesture.type());
-				if (gesture.type().equals(Gesture.Type.TYPE_CIRCLE)) {
-					CircleGesture circle = new CircleGesture(gesture);
-					String clockwiseness;
-					if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 2) {
-						// Clockwise if angle is less than 90 degrees
-						clockwiseness = "clockwise";
-					} else {
-						clockwiseness = "counterclockwise";
-					}
-					System.out.println("  Circle id: " + circle.id()+ ", " + circle.state() + ", progress: " + circle.progress()+ ", radius: " + circle.radius()+ ", " + clockwiseness);
-					if (clockwiseness.equals("clockwise")) {
-						model.setClearValue(true);
-					} else {
-
-					}
-
-				} else {
+			}else if(indexFinger.tipPosition().getZ() > 70) {
 					if (gesture.type().equals(Gesture.Type.TYPE_SWIPE)) {
 						SwipeGesture swipe = new SwipeGesture(gesture);
 						boolean isHorizontal = Math.abs(swipe.direction().get(0)) > Math.abs(swipe.direction().get(1));
@@ -128,7 +107,8 @@ class IndexFingerListener extends Listener {
 									i++;
 
 							}
-							model.setColor(colors.get(i % 9));
+							currentColor = colors.get(i % 9);
+							model.setColor(currentColor);
 							// System.out.println(i+ "");
 						} else { // vertical
 							if (swipe.direction().get(1) > 0) {
@@ -136,7 +116,7 @@ class IndexFingerListener extends Listener {
 									Robot robot = new Robot();
 									Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 									BufferedImage capture = robot.createScreenCapture(screenRect);
-									ImageIO.write(capture, "jpeg", new File("C:/Users/Boyan/Desktop/MotionDraw1.jpeg"));
+									ImageIO.write(capture, "jpeg", new File("C:/Users/User/Desktop/Work/Workshop/Eclipse/MotionDraw/MotionDrawSaves/MotionDraw1.jpeg"));
 								} catch (Exception exception) {
 
 								}
@@ -146,9 +126,12 @@ class IndexFingerListener extends Listener {
 						}
 					}
 				}
+			else if(indexFinger.tipPosition().getZ() < -70){
+				float appX = normalizedPoint.getX() * appWidth;
+				float appY = (1 - normalizedPoint.getY()) * appHeight;
+				model.setColor(Color.WHITE);
+				model.setPoint(new Spot((double) appX, (double) appY, 15.0));
 			}
-		}
-		if (!frame.hands().isEmpty())
-			System.out.print("");
-	}
-}
+			}
+		if(!frame.hands().isEmpty())System.out.print("");
+}}

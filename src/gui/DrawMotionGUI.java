@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -15,7 +16,7 @@ public class DrawMotionGUI {
 			DrawMotionComponent comp = new DrawMotionComponent(model);
 			
 			frame = new JFrame("MotionDraw");
-
+			frame.setBackground(Color.WHITE);
 			frame.setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.add(comp);
