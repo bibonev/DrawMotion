@@ -14,7 +14,7 @@ public class ControllerStart {
 		CircleListener circleListener = new CircleListener(gui.getModel());
         // Have the listener receive events from the controller
         controller.addListener(indexListener);
-        //controller.addListener(circleListener);
+        controller.addListener(circleListener);
         // Keep this process running until Enter is pressed
         try {
             System.in.read();
