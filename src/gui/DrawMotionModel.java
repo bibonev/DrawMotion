@@ -1,11 +1,13 @@
 package gui;
 
+import java.awt.Color;
 import java.util.Observable;
 
 public class DrawMotionModel extends Observable {
 	
 	//private DrawMotion drawMotion;
 	private Spot point;
+	private Color color=Color.BLACK;
 	public DrawMotionModel(){
 		super();
 	}
@@ -19,5 +21,12 @@ public class DrawMotionModel extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-	
+	public void setColor(Color c){
+		color=c;
+		setChanged();
+		notifyObservers();
+	}
+	public Color getColor(){
+		return color;
+	}
 }

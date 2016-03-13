@@ -1,4 +1,5 @@
-package LeapMotion;
+package leapmotion;
+import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
@@ -15,7 +16,7 @@ public class MenuGestureListener extends Listener {
 	public void onConnect(Controller controller) {
 		System.out.println("MenuGestureListener Connected");
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
+
 	}
 
 	public void onDisconnect(Controller controller) {
@@ -29,13 +30,8 @@ public class MenuGestureListener extends Listener {
 	public void onFrame(Controller controller){
 		Frame frame = controller.frame();
 		
-		if (!frame.hands().isEmpty()){
-			if(righthanded=true)
-				hand = frame.hands().rightmost();
-			else
-				hand=frame.hands().leftmost();
-			
-		}
+		
+		
 		
 	}
 }
