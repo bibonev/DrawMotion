@@ -7,7 +7,9 @@ public class DrawMotionModel extends Observable {
 	
 	//private DrawMotion drawMotion;
 	private Spot point;
-	private Color color=Color.BLACK;
+	private Color color = Color.BLACK;
+	private boolean clearValue = false;
+	
 	public DrawMotionModel(){
 		super();
 	}
@@ -28,5 +30,13 @@ public class DrawMotionModel extends Observable {
 	}
 	public Color getColor(){
 		return color;
+	}
+
+	public boolean isClearValue() {
+		return clearValue;
+	}
+
+	public void setClearValue(boolean clearValue) {
+		this.clearValue = clearValue;
 	}
 }

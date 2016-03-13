@@ -1,4 +1,5 @@
 package leapmotion;
+
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -6,10 +7,8 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
@@ -23,9 +22,7 @@ import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
 
-import gui.DrawMotionComponent;
 import gui.DrawMotionModel;
-import gui.MenuComponent;
 import gui.Spot;
 
 class IndexFingerListener extends Listener {
@@ -33,11 +30,11 @@ class IndexFingerListener extends Listener {
 	private Hand hand;
 	private DrawMotionModel model;
 	private ArrayList<Color> colors = new ArrayList<Color>();
-	private int i=2;
-	
-	public IndexFingerListener(DrawMotionModel model,boolean choice){
-		righthanded=choice;
-		this.model=model;
+	private int i = 2;
+
+	public IndexFingerListener(DrawMotionModel model, boolean choice) {
+		righthanded = choice;
+		this.model = model;
 		colors.add(Color.WHITE);
 		colors.add(Color.GRAY);
 		colors.add(Color.BLACK);
@@ -48,8 +45,9 @@ class IndexFingerListener extends Listener {
 		colors.add(Color.CYAN);
 		colors.add(Color.BLUE);
 		colors.add(Color.PINK);
-		
+
 	}
+
 	public void onInit(Controller controller) {
 		System.out.println("IndexFingerListener Initialized");
 	}
@@ -71,95 +69,85 @@ class IndexFingerListener extends Listener {
 
 	public void onFrame(Controller controller) {
 
-		
 		Frame frame = controller.frame();
-		int appWidth = 1920;
-		int appHeight = 1080;
+		int appWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int appHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
 		InteractionBox iBox = frame.interactionBox();
 		Pointable pointable = frame.pointables().frontmost();
 
 		Vector leapPoint = pointable.stabilizedTipPosition();
 		Vector normalizedPoint = iBox.normalizePoint(leapPoint, false);
-		
-		
 
-		if (!frame.hands().isEmpty()){
-			if(righthanded=true)
+		if (!frame.hands().isEmpty()) {
+			if (righthanded = true)
 				hand = frame.hands().rightmost();
 			else
-				hand=frame.hands().leftmost();
+				hand = frame.hands().leftmost();
 			Finger indexFinger = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
-			//System.out.println(" position:"+indexFinger.tipPosition());
+			// System.out.println(" position:"+indexFinger.tipPosition());
 			Gesture gesture = frame.gestures().get(0);
-			//System.out.println(gesture.isValid());
-			if(indexFinger.tipPosition().getZ()>=-100 && indexFinger.tipPosition().getZ()<=100){ 
+			// System.out.println(gesture.isValid());
+			if (indexFinger.tipPosition().getZ() >= -70 && indexFinger.tipPosition().getZ() <= 70) {
 				float appX = normalizedPoint.getX() * appWidth;
 				float appY = (1 - normalizedPoint.getY()) * appHeight;
-				model.setPoint(new Spot((double)appX,(double)appY,3.0));
-			}
-			else{
-				//System.out.println(""+ gesture.type());
-				if(gesture.type().equals(Gesture.Type.TYPE_CIRCLE)){
+				model.setPoint(new Spot((double) appX, (double) appY, 3.0));
+			} else {
+				// System.out.println(""+ gesture.type());
+				if (gesture.type().equals(Gesture.Type.TYPE_CIRCLE)) {
 					CircleGesture circle = new CircleGesture(gesture);
 					String clockwiseness;
-                    if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI/2) {
-                        // Clockwise if angle is less than 90 degrees
-                        clockwiseness = "clockwise";
-                    } else {
-                        clockwiseness = "counterclockwise";
-                    }
-                    if(clockwiseness.equals("clockwise")){
-                    	
-                    }
-                    else{
+					if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 2) {
+						// Clockwise if angle is less than 90 degrees
+						clockwiseness = "clockwise";
+					} else {
+						clockwiseness = "counterclockwise";
+					}
+					if (clockwiseness.equals("clockwise")) {
+						model.setClearValue(true);
+					} else {
 
-                    }
-                    	
-				}
-				else{
-					if(gesture.type().equals(Gesture.Type.TYPE_SWIPE)){
+					}
+
+				} else {
+					if (gesture.type().equals(Gesture.Type.TYPE_SWIPE)) {
 						SwipeGesture swipe = new SwipeGesture(gesture);
-						 boolean isHorizontal = Math.abs(swipe.direction().get(0)) > Math.abs(swipe.direction().get(1));
-				          //Classify as right-left or up-down
-				          if(isHorizontal){
-				              if(swipe.direction().get(0) > 0){
-				                  if(i==0)
-				                	  i=9;
-				                  else
-				                	  i--;
-				              } else {
-				            	  if(i==9)
-				                	  i=0;
-				                  else
-				                	  i++;
-				                  
-				              }
-				              model.setColor(colors.get(i%9));
-			                 // System.out.println(i+ "");
-				          } else { //vertical
-				              if(swipe.direction().get(1) > 0){
-				            	  try
-				                  {
-				            		  Robot robot = new Robot();
-				            		  Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-				            		  BufferedImage capture = robot.createScreenCapture(screenRect);
-				                      ImageIO.write(capture,"jpeg", new File("C:/Users/User/Desktop/Work/Workshop/Eclipse/MotionDraw/MotionDrawSaves/MotionDraw1.jpeg"));
-				                  }
-				                  catch(Exception exception)
-				                  {
-				                     
-				                  }
-				              } else {
-				            	  System.exit(0);
-				              }                  
-				          }
+						boolean isHorizontal = Math.abs(swipe.direction().get(0)) > Math.abs(swipe.direction().get(1));
+						// Classify as right-left or up-down
+						if (isHorizontal) {
+							if (swipe.direction().get(0) > 0) {
+								if (i == 0)
+									i = 9;
+								else
+									i--;
+							} else {
+								if (i == 9)
+									i = 0;
+								else
+									i++;
+
+							}
+							model.setColor(colors.get(i % 9));
+							// System.out.println(i+ "");
+						} else { // vertical
+							if (swipe.direction().get(1) > 0) {
+								try {
+									Robot robot = new Robot();
+									Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+									BufferedImage capture = robot.createScreenCapture(screenRect);
+									ImageIO.write(capture, "jpeg", new File("C:/Users/Boyan/Desktop/MotionDraw1.jpeg"));
+								} catch (Exception exception) {
+
+								}
+							} else {
+								System.exit(0);
+							}
+						}
 					}
 				}
 			}
 		}
 		if (!frame.hands().isEmpty())
 			System.out.print("");
-		}
 	}
-
+}

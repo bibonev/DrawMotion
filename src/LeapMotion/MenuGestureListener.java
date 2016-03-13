@@ -16,7 +16,6 @@ public class MenuGestureListener extends Listener {
 	public void onConnect(Controller controller) {
 		System.out.println("MenuGestureListener Connected");
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-
 	}
 
 	public void onDisconnect(Controller controller) {
@@ -29,9 +28,5 @@ public class MenuGestureListener extends Listener {
 	}
 	public void onFrame(Controller controller){
 		Frame frame = controller.frame();
-		
-		
-		
-		
 	}
 }
