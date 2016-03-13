@@ -103,6 +103,7 @@ class IndexFingerListener extends Listener {
 					} else {
 						clockwiseness = "counterclockwise";
 					}
+					System.out.println("  Circle id: " + circle.id()+ ", " + circle.state() + ", progress: " + circle.progress()+ ", radius: " + circle.radius()+ ", " + clockwiseness);
 					if (clockwiseness.equals("clockwise")) {
 						model.setClearValue(true);
 					} else {
