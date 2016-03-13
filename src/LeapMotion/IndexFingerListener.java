@@ -26,14 +26,13 @@ import gui.DrawMotionModel;
 import gui.Spot;
 
 class IndexFingerListener extends Listener {
-	private boolean righthanded = true;
 	private Hand hand;
 	private DrawMotionModel model;
 	private ArrayList<Color> colors = new ArrayList<Color>();
 	private int i = 2;
+	private Color currentColor = Color.BLACK;
 
-	public IndexFingerListener(DrawMotionModel model, boolean choice) {
-		righthanded = choice;
+	public IndexFingerListener(DrawMotionModel model) {
 		this.model = model;
 		colors.add(Color.WHITE);
 		colors.add(Color.GRAY);
@@ -79,37 +78,18 @@ class IndexFingerListener extends Listener {
 		Vector leapPoint = pointable.stabilizedTipPosition();
 		Vector normalizedPoint = iBox.normalizePoint(leapPoint, false);
 
+		hand = frame.hands().rightmost();
+		
 		if (!frame.hands().isEmpty()) {
-			if (righthanded = true)
-				hand = frame.hands().rightmost();
-			else
-				hand = frame.hands().leftmost();
 			Finger indexFinger = hand.fingers().fingerType(Finger.Type.TYPE_INDEX).get(0);
-			// System.out.println(" position:"+indexFinger.tipPosition());
 			Gesture gesture = frame.gestures().get(0);
-			// System.out.println(gesture.isValid());
+			
 			if (indexFinger.tipPosition().getZ() >= -70 && indexFinger.tipPosition().getZ() <= 70) {
 				float appX = normalizedPoint.getX() * appWidth;
 				float appY = (1 - normalizedPoint.getY()) * appHeight;
+				model.setColor(currentColor);
 				model.setPoint(new Spot((double) appX, (double) appY, 3.0));
-			} else {
-				// System.out.println(""+ gesture.type());
-				if (gesture.type().equals(Gesture.Type.TYPE_CIRCLE)) {
-					CircleGesture circle = new CircleGesture(gesture);
-					String clockwiseness;
-					if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 2) {
-						// Clockwise if angle is less than 90 degrees
-						clockwiseness = "clockwise";
-					} else {
-						clockwiseness = "counterclockwise";
-					}
-					if (clockwiseness.equals("clockwise")) {
-						model.setClearValue(true);
-					} else {
-
-					}
-
-				} else {
+			}else {
 					if (gesture.type().equals(Gesture.Type.TYPE_SWIPE)) {
 						SwipeGesture swipe = new SwipeGesture(gesture);
 						boolean isHorizontal = Math.abs(swipe.direction().get(0)) > Math.abs(swipe.direction().get(1));
@@ -127,7 +107,8 @@ class IndexFingerListener extends Listener {
 									i++;
 
 							}
-							model.setColor(colors.get(i % 9));
+							currentColor = colors.get(i % 9);
+							model.setColor(currentColor);
 							// System.out.println(i+ "");
 						} else { // vertical
 							if (swipe.direction().get(1) > 0) {
@@ -143,11 +124,13 @@ class IndexFingerListener extends Listener {
 								System.exit(0);
 							}
 						}
+					}else{
+						float appX = normalizedPoint.getX() * appWidth;
+						float appY = (1 - normalizedPoint.getY()) * appHeight;
+						model.setColor(Color.WHITE);
+						model.setPoint(new Spot((double) appX, (double) appY, 15.0));
 					}
 				}
 			}
-		}
-		if (!frame.hands().isEmpty())
-			System.out.print("");
-	}
-}
+		if(!frame.hands().isEmpty())System.out.print("");
+}}

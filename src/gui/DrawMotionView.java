@@ -31,6 +31,7 @@ public class DrawMotionView extends JPanel implements Observer{
 		} else {
 			g2.clearRect(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 			model.setClearValue(false);
+			model.setPoint(null);
 		}
 	}
 
